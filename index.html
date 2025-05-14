@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MQTT para mensajes</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+</head>
+<body>
+
+  <input type="text" id="mensaje" placeholder="Coloca un mensaje">
+  <button onclick="enviarMensaje()">Enviar</button>
+  <h3>Aquí están los mensajes enviados</h3>
+  <ul id="mensajes"></ul>
+
+  <script>
+
+    const client = new Paho.MQTT.Client("192.168.1.100", 9001, "Miguel");
+
+
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    client.connect({ onSuccess: onConnect, useSSL: false });
+
+    function onConnect() {
+      console.log("Aquí aparece un mensaje de Miguel");
+      client.subscribe("World");
+    }
+
+    function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0) {
+        console.log("Conexión perdida: " + responseObject.errorMessage);
+      }
+    }
+
+    function onMessageArrived(message) {
+      console.log("Mensaje recibido: " + message.payloadString);
+      const ul = document.getElementById("mensajes");
+      const li = document.createElement("li");
+      li.textContent = message.payloadString;
+      ul.appendChild(li);
+    }
+
+    function enviarMensaje() {
+  const texto = document.getElementById("mensaje").value;
+  if (texto.trim() !== "") {
+    // Creamos un objeto JSON
+    const payload = {
+      mensaje: texto,
+      autor: "Miguel",
+      timestamp: new Date().toISOString()
+    };
+
+    // Convertimos a string JSON
+    const message = new Paho.MQTT.Message(JSON.stringify(payload));
+    message.destinationName = "World";
+    client.send(message);
+    
+    document.getElementById("mensaje").value = "";
+  }
+}
+  </script>
+</body>
+</html>
