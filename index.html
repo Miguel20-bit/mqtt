@@ -14,7 +14,7 @@
 
   <script>
 
-    const client = new Paho.MQTT.Client("10.50.4.61", 9001, "Miguel");
+    const client = new Paho.MQTT.Client("localhost", 9001, "Miguel");
 
 
     client.onConnectionLost = onConnectionLost;
