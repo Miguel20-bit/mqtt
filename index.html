@@ -14,7 +14,7 @@
 
   <script>
 
-    const client = new Paho.MQTT.Client("192.168.1.100", 9001, "Miguel");
+    const client = new Paho.MQTT.Client("10.50.4.61", 9001, "Miguel");
 
 
     client.onConnectionLost = onConnectionLost;
@@ -42,23 +42,23 @@
     }
 
     function enviarMensaje() {
-  const texto = document.getElementById("mensaje").value;
-  if (texto.trim() !== "") {
-    // Creamos un objeto JSON
-    const payload = {
-      mensaje: texto,
-      autor: "Miguel",
-      timestamp: new Date().toISOString()
-    };
+      const texto = document.getElementById("mensaje").value;
+      if (texto.trim() !== "") {
+        // Creamos un objeto JSON
+        const payload = {
+          mensaje: texto,
+          autor: "Miguel",
+          timestamp: new Date().toISOString()
+        };
 
-    // Convertimos a string JSON
-    const message = new Paho.MQTT.Message(JSON.stringify(payload));
-    message.destinationName = "World";
-    client.send(message);
-    
-    document.getElementById("mensaje").value = "";
-  }
-}
+        // Convertimos a string JSON
+        const message = new Paho.MQTT.Message(JSON.stringify(payload));
+        message.destinationName = "World";
+        client.send(message);
+        
+        document.getElementById("mensaje").value = "";
+      }
+    }
   </script>
 </body>
 </html>
